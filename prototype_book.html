@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Yiyang Liu">
-<meta name="dcterms.date" content="2025-11-11">
+<meta name="dcterms.date" content="2025-12-02">
 
 <title>Spectral Graphs &amp; Poly2Graph — A Hands‑On Tutorial – Spectral Graphs &amp; Poly2Graph Tutorial</title>
 <style>
@@ -230,7 +230,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">November 11, 2025</p>
+      <p class="date">December 2, 2025</p>
     </div>
   </div>
   
@@ -259,7 +259,7 @@ window.Quarto = {
 <p align="center">
 <img src="assets/conceptmap.jpg" alt="image grid of ChP" width="700"> <br> <em>Figure 1. Concept map </em>
 </p>
-<p>The Figure 1 shows the <strong>concept map of this tutorial</strong>, (a) starting from 1-D crystal Hamiltonian <span class="math inline">\(H(z)\)</span> in momentum space, or its <strong>characteristic polynomial</strong> <span class="math inline">\(P(z,E) = z^2 + 1/z^2 + 10Ez - E^4\)</span>, (b) calculating the spectral potential <span class="math inline">\(\Phi(E)\)</span> (Rokin Function) through the roots of <span class="math inline">\(P(z,E) = 0\)</span>, (c) the density of states <span class="math inline">\(\rho(E)\)</span>, obtained as the Laplacian of <span class="math inline">\(\Phi(E)\)</span> and (d) visualizing the spectral graph through <code>sg.spectral_graph()</code> based on <code>NetWorkX</code>.</p>
+<p>The Figure 1 shows the <strong>concept map of this tutorial</strong>, (a) starting from 1-D crystal Hamiltonian <span class="math inline">\(H(z)\)</span> in momentum space, or its <strong>characteristic polynomial</strong> <span class="math inline">\(P(z,E) = z^2 + 1/z^2 + 10Ez - E^4\)</span>, (b) calculating the spectral potential <span class="math inline">\(\Phi(E)\)</span> (Ronkin Function) through the roots of <span class="math inline">\(P(z,E) = 0\)</span>, (c) the density of states <span class="math inline">\(\rho(E)\)</span>, obtained as the Laplacian of <span class="math inline">\(\Phi(E)\)</span>, (d) and (e) the spectral graphs computed by <code>poly2graph</code>.</p>
 </section>
 <section id="sec-what-is-spectral-graph" class="level2" data-number="3">
 <h2 data-number="3" class="anchored" data-anchor-id="sec-what-is-spectral-graph"><span class="header-section-number">3</span> What is a spectral graph?</h2>
@@ -287,7 +287,7 @@ window.Quarto = {
 <p><strong>Beyond Non‑Hermitian (algebra‑to‑graph):</strong></p>
 <p>Spectral graph is a general algebra-to-graph bridge. Because the equation <span class="math inline">\(\Phi(E) = - \log|a_q(E)| - \sum_{i=p+1}^{p+q}\log|\beta_i(E)|\)</span> uses only <span class="math inline">\(P(E,z)\)</span>, thus</p>
 <ol type="1">
-<li>Any <strong>bivariate Laurent polynomial</strong> <span class="math inline">\(P(z,E)\)</span> has a spectralgraph.</li>
+<li>Any <strong>bivariate Laurent polynomial</strong> <span class="math inline">\(P(z,E)\)</span> has a spectral graph.</li>
 <li>Any <strong>univariate polynomial</strong> <span class="math inline">\(P(z)\)</span> can be viewed as one-band Bloch Hamiltonian; and any vector can be treated as a symmetrised coefficient list of a univariate polynomial.</li>
 <li>Any <strong>matrix</strong> can be decomposed into a product of one-band Hamiltonian matrices, which can form a multi-band Bloch Hamiltonian, so in general it has a multiset of spectral graphs.</li>
 </ol>
@@ -455,8 +455,8 @@ Spectral window: {'Re(E)_min': -2.3113904784272243, 'Re(E)_max': 1.6398687049402
 <h2 data-number="6" class="anchored" data-anchor-id="sec-session-2"><span class="header-section-number">6</span> What was hard before (and why we need <code>Poly2Graph</code>)?</h2>
 <p>Prior to <code>Poly2Graph</code>, extracting spectral graphs was <strong>manual</strong> and <strong>fragile</strong>:</p>
 <ul>
-<li>You had to <strong>manually plot</strong> long chain spectra, and visually infer the continum graph; for some scenarios of extremely complex spectra, they are plotted slolwly and fragile.</li>
-<li>Computing the GBZ roots <span class="math inline">\(\beta_i(E)\)</span> for <strong>every</strong> sampled energy <span class="math inline">\(E\)</span> is a bottleneck; naive solvers are slow and memory‑hungry.</li>
+<li>You had to <strong>manually plot</strong> long chain spectra, and visually infer the continum graph; for some scenarios of extremely complex spectra, they are plotted slowly and fragile.</li>
+<li>Computing the GBZ roots <span class="math inline">\(z_i(E)\)</span> for <strong>every</strong> sampled energy <span class="math inline">\(E\)</span> is a bottleneck; naive solvers are slow and memory‑hungry.</li>
 <li>Even with a DOS image, turning that into a <strong>clean graph</strong> with correct endpoints, junctions, and loops requires careful morphology (thresholding, skeletonization, node/edge parsing).</li>
 </ul>
 <p><code>Poly2Graph</code> lifts these barriers with an automated end‑to‑end, high‑performance pipeline:</p>
@@ -465,7 +465,7 @@ Spectral window: {'Re(E)_min': -2.3113904784272243, 'Re(E)_max': 1.6398687049402
 </li>
 <li>Computes the <strong>spectral potential</strong> <span class="math inline">\(\Phi(E)\)</span> from <span class="math inline">\(z\)</span>‑roots (fast eigen‑solvers on Frobenius companion matrices; optional GPU/TPU acceleration via TensorFlow/PyTorch).<br>
 </li>
-<li>Takes the <strong>Laplacian</strong> on Rokin function to get DOS, then does <strong>adaptive, two‑stage refinement</strong> (coarse mask → high‑res on just ~1–5% of the region).<br>
+<li>Takes the <strong>Laplacian</strong> on Ronkin function to get DOS, then does <strong>adaptive, two‑stage refinement</strong> (coarse mask → high‑res on just ~1–5% of the region).<br>
 </li>
 <li>In rare low‑DOS or long‑range multi‑band settings, local numerical instabilities can arise, however, <code>Poly2Graph</code> mitigates them with node‑merging and short‑edge contraction.</li>
 </ol>
@@ -477,13 +477,13 @@ Spectral window: {'Re(E)_min': -2.3113904784272243, 'Re(E)_max': 1.6398687049402
 <p><strong>Algebraic formulation:</strong></p>
 <p>Let <span class="math inline">\(H(z)\)</span> be the Bloch Hamiltonian with <span class="math inline">\(z=e^{ik}\)</span> and <span class="math display">\[
 P(z,E)=\det\!\big[H(z)-EI\big]=\sum_{n=-p}^{q} a_n(E)\,z^n .
-\]</span> For a fixed <span class="math inline">\(E\)</span>, order the <span class="math inline">\(z\)</span>‑roots of <span class="math inline">\(P(z,E)=0\)</span> by magnitude <span class="math inline">\(|\beta_1(E)|\le\cdots\le|\beta_{p+q}(E)|\)</span>. The <strong>generalized Brillouin zone (GBZ)</strong> is characterized by the condition: <span class="math display">\[
-|\beta_p(E)|=|\beta_{p+1}(E)|,
+\]</span> For a fixed <span class="math inline">\(E\)</span>, order the <span class="math inline">\(z\)</span>‑roots of <span class="math inline">\(P(z,E)=0\)</span> by magnitude <span class="math inline">\(|z_1(E)|\le\cdots\le|z_{p+q}(E)|\)</span>. The <strong>generalized Brillouin zone (GBZ)</strong> is characterized by the condition: <span class="math display">\[
+|z_p(E)|=|z_{p+1}(E)|,
 \]</span></p>
 <p>and the corresponding loci of <span class="math inline">\(E\)</span> form the OBC spectral graph. In particular, the <strong>density of states (DOS)</strong> in the <strong>thermodynamic limit</strong> (Number of cells <span class="math inline">\(N\to\infty\)</span>) is supported <em>only along these loci</em> in the distributional sense.</p>
 <p><strong>Potential‑theoretic view:</strong></p>
 <p>A convenient <strong>“spectral potential”</strong> (Ronkin function) can be defined from the <span class="math inline">\(z\)</span>‑roots; one can wirte as: <span class="math display">\[
-\Phi(E)=-\log|a_q(E)|-\sum_{i=p+1}^{p+q}\log|\beta_i(E)|.
+\Phi(E)=-\log|a_q(E)|-\sum_{i=p+1}^{p+q}\log|z_i(E)|.
 \]</span> Where <span class="math inline">\(a_q(E)\)</span> is the leading coefficient of the characteristic polynomial <span class="math inline">\(P(z,E)\)</span>. Its Laplacian yields the <strong>density of states(DOS)</strong>, <span class="math display">\[
 \rho(E)=-\frac{1}{2\pi}\,\nabla^2\Phi(E),
 \]</span> where the “<span class="math inline">\(-\)</span>” sign depends on the convention used for <span class="math inline">\(\Phi\)</span>. In the distributional sense, <span class="math inline">\(\rho(E)\)</span> is supported <strong>only on the loci</strong> of spectral graph. Equivalently, the spectral graph coincides with the ridges of <span class="math inline">\(\Phi(E)\)</span>.</p>
@@ -1014,8 +1014,8 @@ P(z,E) &amp;= \det[H(z)-EI] \\
 <p>We can obtain the <span class="math inline">\(z(E)\)</span> by simply solving the roots of <span class="math inline">\(P(z,E) = 0\)</span>: <span class="math inline">\(z_{\pm}(E)
 =\frac{\,E^2 - t_1^2 - t_2^2 \,\pm\,
 \sqrt{(E^2 - t_1^2 - t_2^2)^2 - 4\,t_1^2 t_2^2}\,}
-{\,2 t_1 t_2\,}.\)</span> here <span class="math inline">\(z(E)\)</span> and <span class="math inline">\(\beta (E)\)</span> are the same with different mathematical symbols.</p>
-<p>Due to the maximum hopping range to left and right here are both one, we notice that <span class="math inline">\(|\beta_p(E)|=|\beta_{p+1}(E)|\)</span> present as <span class="math inline">\(|z_{-}(E)| = |z_{+}(E)|\)</span>, thus we can define the GBZ of this SSH model.</p>
+{\,2 t_1 t_2\,}.\)</span></p>
+<p>Due to the maximum hopping range to left and right here are both one, we notice that <span class="math inline">\(|z_p(E)|=|z_{p+1}(E)|\)</span> present as <span class="math inline">\(|z_{-}(E)| = |z_{+}(E)|\)</span>, thus we can define the GBZ of this SSH model.</p>
 <p>Using the equations mentioned above <a href="#sec-math-physics" class="quarto-xref">Section&nbsp;7</a> , we can also try to obtain the <span class="math inline">\(\Phi(E)\)</span> and <span class="math inline">\(\rho(E)\)</span> ourselves.</p>
 <p>You can check your answer with mine:</p>
 <p><span class="math inline">\(\Phi(E) = - \log|t_{1}t_{2}| - \log|z_{+}(E)|\)</span>, <span class="math inline">\(\rho(E) =  \frac{1}{2\pi}\nabla^2 \log|z_{+}(E)|.\)</span></p>
